@@ -1,14 +1,22 @@
-import { type Config } from "tailwindcss";
+// import { type Config } from "tailwindcss";
 
-export default {
-  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+import {nextui} from "@nextui-org/react";
+
+const config = {
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./index.html",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
+  ],
+
   theme: {
-    extend: {
-      colors: {
-        primary: "#FE3D87",
-        secondary: "#02AFFF",
-      },
-    },
+    extend: {},
   },
-  plugins: [require('@tailwindcss/forms')],
-} satisfies Config;
+  darkMode: "class",
+  plugins: [nextui()]
+}
+
+export default config;
+
+
+// } satisfies Config;

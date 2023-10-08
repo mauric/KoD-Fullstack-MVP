@@ -2,7 +2,10 @@ import { type AppType } from "next/dist/shared/lib/utils";
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { hardhat } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
- 
+
+import {NextUIProvider} from '@nextui-org/react'
+
+
 import "~/styles/globals.css";
 
 
@@ -18,9 +21,16 @@ const client = createClient({
 })
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return  <WagmiConfig client={client}>
-    <Component {...pageProps} />;
-    </WagmiConfig>
+  return (
+    <NextUIProvider>
+      <WagmiConfig client={client}>
+        <Component {...pageProps} />
+      </WagmiConfig>
+    </NextUIProvider>
+
+
+
+  )
 };
 
 export default MyApp;

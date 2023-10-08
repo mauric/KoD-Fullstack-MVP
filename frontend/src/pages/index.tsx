@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import { ethers } from "ethers";
 import { type NextPage } from "next";
 import Head from "next/head";
@@ -11,17 +13,24 @@ import {
 } from "../generated";
 
 const NoSSR: FC<{ children: ReactNode }> = ({ children }) => {
+
   const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
   if (!isMounted) {
     return null;
   }
+
   return <>{children}</>;
 };
 
 const Home: NextPage = () => {
+
+  const router = useRouter();
+  
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
@@ -47,48 +56,46 @@ const Home: NextPage = () => {
   });
 
   const { address, isConnected } = useAccount();
+
+  // Cuando el usuario se conecte correctamente
+  if (isConnected) {
+      router.push({
+          pathname: '/home',
+          query: { address },
+      });
+  }
+
   return (
-    <>
+    <div className='h-max'>
       <Head>
-        <title>Fullstack Web3 DApp</title>
+        <title>Canna Chain</title>
         <meta
           name="description"
           content="Fullstack Web3 Dapp built with hardhat, Next.js and wagmi"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-primary">
-        <h1 className="text-3xl font-bold text-white">Fullstack Web3 app</h1>
+      <main className="flex flex-col items-center justify-center max-w-4xl mx-auto h-96 mt-40 items-center align-center bg-primary">
+        <h1 className="text-3xl font-bold text-white mb-7">CanaChain Web3 DApp</h1>
         <NoSSR>
           {isConnected ? (
+
+            // Si está CONECTADO
             <div className="flex flex-col items-center justify-center gap-12">
               <div className="flex flex-col items-center justify-center gap-1">
                 <p className="text-white">Connected to wallet</p>
                 <p className="text-white">{address}</p>
               </div>
               <div className="flex flex-col items-center justify-center gap-4">
-                <h2 className="text-xl font-bold text-white">
-                  Storage contract
-                </h2>
-                <p className="text-white">Number: {storageData?.toString()}</p>
-                <input
-                  value={newNumber}
-                  type="number"
-                  onChange={(e) => setNewNumber(e.target.value || "")}
-                ></input>
-                <button
-                  className="rounded-full bg-secondary px-4 py-2 font-bold text-white disabled:opacity-50"
-                  onClick={() => write && write()}
-                  disabled={!write}
-                >
-                  Set Number
-                </button>
+              
                 {isLoading && <p>loading...</p>}
               </div>
             </div>
-          ) : (
+          )
+          // Si está desconectado mostrar botón de conectar
+          : (
             <button
-              className="rounded-full bg-secondary px-4 py-2 font-bold text-white"
+              className="rounded-full bg-success px-4 py-2 font-bold text-white"
               onClick={() => connect()}
             >
               Conectar Wallet
@@ -96,7 +103,7 @@ const Home: NextPage = () => {
           )}
         </NoSSR>
       </main>
-    </>
+    </div>
   );
 };
 
